@@ -98,10 +98,10 @@ class ApiClient {
       body: JSON.stringify(userData),
     }, true); // skipAuth = true to not send token header
     
-    // Backend returns: { data: { user: {...}, token: "..." }, message: "..." }
-    // Extract from response.data
-    const token = response?.data?.token;
-    const user = response?.data?.user;
+    // Backend returns: { data: user, token: "...", message: "..." }
+    // Note: Backend puts user in data and token at root level
+    const token = response?.token;
+    const user = response?.data;
     
     return {
       token,
@@ -117,9 +117,11 @@ class ApiClient {
   }
 
   async verifyToken() {
-    return this.request<{ user: any }>(`/auth/verify`, {
+    const response = await this.request<any>(`/auth/verify`, {
       method: 'GET',
     });
+    // Backend returns { data: user, message: "..." }
+    return { user: response.data || response };
   }
 
   async refreshToken() {
@@ -157,7 +159,9 @@ class ApiClient {
 
   // Venues
   async getVenues() {
-    return this.request<any[]>('/venues');
+    const response = await this.request<any>('/venues');
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createVenue(data: any) {
@@ -182,7 +186,9 @@ class ApiClient {
 
   // Vendors
   async getVendors() {
-    return this.request<any[]>('/vendors');
+    const response = await this.request<any>('/vendors');
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createVendor(data: any) {
@@ -208,8 +214,8 @@ class ApiClient {
   // Students
   async getStudents() {
     const response = await this.request<any>('/students');
-    // Return the response as-is since backend returns { data: [...], message: "..." }
-    return response;
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createStudent(data: any) {
@@ -259,19 +265,26 @@ class ApiClient {
     if (params.toString()) url += `?${params.toString()}`;
     
     const response = await this.request<any>(url);
-    return response;
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async getProviderCounts() {
-    return this.request<any>('/providers/counts/by-category');
+    const response = await this.request<any>('/providers/counts/by-category');
+    // Backend returns { data: {...}, message: "..." }
+    return response.data || response;
   }
 
   async getProviderStats() {
-    return this.request<any>('/providers/stats/overview');
+    const response = await this.request<any>('/providers/stats/overview');
+    // Backend returns { data: {...}, message: "..." }
+    return response.data || response;
   }
 
   async getProvider(id: number) {
-    return this.request<any>(`/providers/${id}`);
+    const response = await this.request<any>(`/providers/${id}`);
+    // Backend returns { data: {...}, message: "..." }
+    return response.data || response;
   }
 
   async createProvider(data: any) {
@@ -296,7 +309,9 @@ class ApiClient {
 
   // Content Pages
   async getContentPages() {
-    return this.request<any[]>('/content-pages');
+    const response = await this.request<any>('/content-pages');
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createContentPage(data: any) {
@@ -321,7 +336,9 @@ class ApiClient {
 
   // Media Items
   async getMediaItems() {
-    return this.request<any[]>('/media-items');
+    const response = await this.request<any>('/media-items');
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createMediaItem(data: any) {
@@ -346,7 +363,9 @@ class ApiClient {
 
   // News Items
   async getNewsItems() {
-    return this.request<any[]>('/news-items');
+    const response = await this.request<any>('/news-items');
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createNewsItem(data: any) {
@@ -371,7 +390,9 @@ class ApiClient {
 
   // Events
   async getEvents() {
-    return this.request<any[]>('/events');
+    const response = await this.request<any>('/events');
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createEvent(data: any) {
@@ -396,7 +417,9 @@ class ApiClient {
 
   // Services
   async getServices() {
-    return this.request<any[]>('/services');
+    const response = await this.request<any>('/services');
+    // Backend returns { data: [...], message: "..." }
+    return response.data || response || [];
   }
 
   async createService(data: any) {
