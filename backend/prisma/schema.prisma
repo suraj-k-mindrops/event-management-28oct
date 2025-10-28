@@ -1,0 +1,380 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model directory_entries {
+  id                          Int      @id @default(autoincrement())
+  typeOfEvent                 String   @db.VarChar(255)
+  nameOfEvent                 String   @db.VarChar(255)
+  venueLocation               String   @db.VarChar(255)
+  dateOfEvent                 DateTime @db.DateTime(0)
+  teamsDepartmentsWorkprofile String?  @db.Text
+  targetAudience              String?  @db.Text
+  theme                       String?  @db.VarChar(255)
+  eventCompany                String?  @db.VarChar(255)
+  sponsors                    String?  @db.Text
+  vendors                     String?  @db.Text
+  manpowerRequired            String?  @db.Text
+  logisticsServiceProvider    String?  @db.VarChar(255)
+  miscellaneous               String?  @db.Text
+  mediaPhotos                 String?  @db.VarChar(500)
+  mediaVideos                 String?  @db.VarChar(500)
+  organizerName               String   @db.VarChar(255)
+  created_at                  DateTime @default(now())
+  updated_at                  DateTime @updatedAt
+
+  @@index([dateOfEvent])
+}
+
+model event_packages {
+  id                          Int      @id @default(autoincrement())
+  typeOfEvent                 String   @db.VarChar(255)
+  nameOfEvent                 String   @db.VarChar(255)
+  venueLocation               String   @db.VarChar(255)
+  dateOfEvent                 DateTime @db.DateTime(0)
+  teamsDepartmentsWorkprofile String?  @db.Text
+  targetAudience              String?  @db.Text
+  theme                       String?  @db.VarChar(255)
+  eventCompany                String?  @db.VarChar(255)
+  sponsors                    String?  @db.Text
+  vendors                     String?  @db.Text
+  manpowerRequired            String?  @db.Text
+  logisticsServiceProvider    String?  @db.VarChar(255)
+  miscellaneous               String?  @db.Text
+  mediaPhotos                 String?  @db.VarChar(500)
+  mediaVideos                 String?  @db.VarChar(500)
+  organizerName               String   @db.VarChar(255)
+  successMetrics              String?  @db.Text
+  totalAttended               String?  @db.VarChar(50)
+  feedback                    String?  @db.Text
+  rating                      String?  @db.VarChar(50)
+  created_at                  DateTime @default(now())
+  updated_at                  DateTime @updatedAt
+
+  @@index([dateOfEvent])
+}
+
+model event_types {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  color       String   @db.VarChar(7)
+  description String?  @db.Text
+  category    String?  @db.VarChar(255)
+  subEvents   Json?
+  active      Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  events      events[]
+
+  @@index([active])
+}
+
+model events {
+  id            Int           @id @default(autoincrement())
+  name          String        @db.VarChar(255)
+  date          DateTime      @db.DateTime(0)
+  description   String?       @db.Text
+  event_type_id Int?
+  venue_id      Int?
+  organizer_id  Int
+  status        events_status @default(DRAFT)
+  capacity      Int?
+  price         Decimal?      @db.Decimal(10, 2)
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  event_types   event_types?  @relation(fields: [event_type_id], references: [id])
+  users         users         @relation(fields: [organizer_id], references: [id], onDelete: Cascade)
+  venues        venues?       @relation(fields: [venue_id], references: [id])
+
+  @@index([date])
+  @@index([event_type_id], map: "events_event_type_id_fkey")
+  @@index([organizer_id], map: "events_organizer_id_fkey")
+  @@index([status])
+  @@index([venue_id], map: "events_venue_id_fkey")
+}
+
+model providers {
+  id                      Int                @id @default(autoincrement())
+  name                    String             @db.VarChar(255)
+  contact                 String             @db.VarChar(50)
+  address                 String?            @db.Text
+  description             String?            @db.Text
+  email                   String             @db.VarChar(255)
+  website                 String?            @db.VarChar(500)
+  status                  providers_status   @default(ACTIVE)
+  category                providers_category
+  logistics_id            String?            @db.VarChar(255)
+  service_type            String?            @db.VarChar(255)
+  vehicle_types_available String?            @db.VarChar(255)
+  equipment_types         String?            @db.VarChar(255)
+  capacity_handling       String?            @db.VarChar(255)
+  available_locations     String?            @db.VarChar(255)
+  contact_person          String?            @db.VarChar(255)
+  contact_number          String?            @db.VarChar(50)
+  license_number          String?            @db.VarChar(255)
+  insurance_coverage      String?            @db.VarChar(255)
+  service_radius          String?            @db.VarChar(255)
+  cuisine_types           String?            @db.VarChar(255)
+  menu_categories         String?            @db.VarChar(255)
+  serving_capacity        String?            @db.VarChar(255)
+  equipment_available     String?            @db.VarChar(255)
+  staff_count             String?            @db.VarChar(255)
+  halal_certified         Boolean            @default(false)
+  vegetarian_options      Boolean            @default(false)
+  security_license        String?            @db.VarChar(255)
+  security_services       String?            @db.VarChar(255)
+  staff_qualifications    String?            @db.VarChar(255)
+  equipment_provided      String?            @db.VarChar(255)
+  response_time           String?            @db.VarChar(255)
+  patrol_areas            String?            @db.VarChar(255)
+  gift_categories         String?            @db.VarChar(255)
+  price_range             String?            @db.VarChar(255)
+  customization_available Boolean            @default(false)
+  delivery_available      Boolean            @default(false)
+  bulk_discounts          Boolean            @default(false)
+  equipment_owned         String?            @db.VarChar(255)
+  music_genres            String?            @db.VarChar(255)
+  experience_years        String?            @db.VarChar(255)
+  event_types_handled     String?            @db.VarChar(255)
+  lighting_available      Boolean            @default(false)
+  sound_system_power      String?            @db.VarChar(255)
+  photography_style       String?            @db.VarChar(255)
+  equipment_used          String?            @db.VarChar(255)
+  years_experience        String?            @db.VarChar(255)
+  portfolio_link          String?            @db.VarChar(500)
+  editing_services        Boolean            @default(false)
+  drone_photography       Boolean            @default(false)
+  latitude                String?            @db.VarChar(50)
+  longitude               String?            @db.VarChar(50)
+  owner_id                Int?
+  created_at              DateTime           @default(now())
+  updated_at              DateTime           @updatedAt
+
+  @@index([category])
+  @@index([status])
+}
+
+model students {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  email         String          @unique @db.VarChar(255)
+  phone         String?         @db.VarChar(50)
+  status        students_status @default(ACTIVE)
+  portfolioLink String?         @db.VarChar(500)
+  address       String?         @db.Text
+  organisation  String?         @db.VarChar(255)
+  user_id       Int             @unique
+  user          users           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+
+  @@index([status])
+  @@index([email])
+}
+
+model users {
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(255)
+  email      String     @unique @db.VarChar(255)
+  password   String     @db.VarChar(255)
+  role       users_role @default(STUDENT)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  events     events[]
+  student    students?
+}
+
+model venues {
+  id                        Int           @id @default(autoincrement())
+  name                      String        @db.VarChar(255)
+  location                  String        @db.VarChar(255)
+  capacity                  Int
+  description               String?       @db.Text
+  amenities                 Json?
+  status                    venues_status @default(ACTIVE)
+  bookings                  Int           @default(0)
+  created_at                DateTime      @default(now())
+  updated_at                DateTime      @updatedAt
+  address                   String?       @db.VarChar(255)
+  booking_status            String?       @db.VarChar(50)
+  contact                   String?       @db.VarChar(50)
+  date                      String?       @db.VarChar(255)
+  email                     String?       @db.VarChar(255)
+  event_types_supported     Json?
+  latitude                  String?       @db.VarChar(50)
+  longitude                 String?       @db.VarChar(50)
+  parking_capacity          String?       @db.VarChar(50)
+  rooms_available           String?       @db.VarChar(50)
+  sub_event_types_supported Json?
+  total_area_sqft           String?       @db.VarChar(50)
+  venue_type                String?       @db.VarChar(255)
+  website                   String?       @db.VarChar(500)
+  events                    events[]
+
+  @@index([status])
+  @@index([location])
+}
+
+model content_pages {
+  id           Int                  @id @default(autoincrement())
+  title        String               @db.VarChar(255)
+  content      String               @db.Text
+  status       content_pages_status @default(DRAFT)
+  lastModified DateTime             @default(now())
+  slug         String               @unique @db.VarChar(255)
+  created_at   DateTime             @default(now())
+  updated_at   DateTime
+
+  @@index([slug])
+  @@index([status])
+}
+
+model fields {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(255)
+  capacity    Int
+  location    String        @db.VarChar(255)
+  status      fields_status @default(ACTIVE)
+  bookings    Int           @default(0)
+  description String?       @db.Text
+  amenities   Json?
+  created_at  DateTime      @default(now())
+  updated_at  DateTime
+
+  @@index([status])
+}
+
+model media_items {
+  id         Int              @id @default(autoincrement())
+  name       String           @db.VarChar(255)
+  type       media_items_type
+  size       String?          @db.VarChar(50)
+  uploaded   DateTime         @default(now())
+  url        String?          @db.VarChar(500)
+  created_at DateTime         @default(now())
+  updated_at DateTime
+
+  @@index([type])
+}
+
+model news_items {
+  id         Int               @id @default(autoincrement())
+  title      String            @db.VarChar(255)
+  content    String            @db.Text
+  status     news_items_status @default(DRAFT)
+  date       DateTime          @db.DateTime(0)
+  views      Int               @default(0)
+  author     String?           @db.VarChar(255)
+  tags       Json?
+  imageUrl   String?           @db.VarChar(500)
+  created_at DateTime          @default(now())
+  updated_at DateTime
+
+  @@index([date])
+  @@index([status])
+}
+
+model services {
+  id          Int             @id @default(autoincrement())
+  name        String          @db.VarChar(255)
+  category    String          @db.VarChar(255)
+  description String?         @db.Text
+  price       Decimal?        @db.Decimal(10, 2)
+  status      services_status @default(ACTIVE)
+  created_at  DateTime        @default(now())
+  updated_at  DateTime
+
+  @@index([category])
+  @@index([status])
+}
+
+model vendors {
+  id         Int            @id @default(autoincrement())
+  name       String         @db.VarChar(255)
+  category   String         @db.VarChar(255)
+  contact    String         @db.VarChar(50)
+  email      String         @db.VarChar(255)
+  address    String?        @db.Text
+  website    String?        @db.VarChar(500)
+  status     vendors_status @default(ACTIVE)
+  created_at DateTime       @default(now())
+  updated_at DateTime
+
+  @@index([category])
+  @@index([status])
+}
+
+enum users_role {
+  STUDENT
+  ADMIN
+  ORGANIZER
+}
+
+enum media_items_type {
+  IMAGE
+  DOCUMENT
+  VIDEO
+}
+
+enum content_pages_status {
+  PUBLISHED
+  DRAFT
+}
+
+enum news_items_status {
+  PUBLISHED
+  DRAFT
+}
+
+enum fields_status {
+  ACTIVE
+  MAINTENANCE
+  INACTIVE
+}
+
+enum students_status {
+  ACTIVE
+  INACTIVE
+}
+
+enum services_status {
+  ACTIVE
+  INACTIVE
+}
+
+enum venues_status {
+  ACTIVE
+  MAINTENANCE
+  INACTIVE
+}
+
+enum events_status {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+}
+
+enum providers_status {
+  ACTIVE
+  INACTIVE
+}
+
+enum vendors_status {
+  ACTIVE
+  INACTIVE
+}
+
+enum providers_category {
+  LOGISTICS
+  CATERING
+  SECURITY
+  GIFTS
+  DJ
+  PHOTOGRAPHERS
+  VENUES
+}
