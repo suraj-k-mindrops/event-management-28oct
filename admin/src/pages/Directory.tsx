@@ -389,20 +389,11 @@ const sampleEvents: DirectoryEntry[] = [
 ];
 
 export default function Directory() {
-  // Fetch entries from API
-  const { data: entriesResponse, isLoading, refetch } = useQuery({
+  // Fetch entries from API with auto-refresh every 10 seconds
+  const { data: entriesResponse, isLoading } = useQuery({
     queryKey: ['directory-entries'],
     queryFn: async () => {
       return apiClient.getDirectoryEntries();
-    },
-  });
-
-  // Set up refetch interval to check for updates every 10 seconds
-  useQuery({
-    queryKey: ['directory-entries-refresh'],
-    queryFn: async () => {
-      await refetch();
-      return true;
     },
     refetchInterval: 10000, // 10 seconds
   });

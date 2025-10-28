@@ -10,13 +10,13 @@ This project consists of **two frontend applications** (Admin Panel and Student 
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                    Backend API                            │
-│          (Node.js/Express + MySQL Database)                │
-│                                                           │
-│  • Authentication (JWT-based)                             │
-│  • Role-Based Access Control (RBAC)                       │
-│  • RESTful API Endpoints                                  │
-│  • Database: MySQL                                        │
+│                    Backend API                           │
+│          (Node.js/Express + MySQL Database)              │
+│                                                          │
+│  • Authentication (JWT-based)                            │
+│  • Role-Based Access Control (RBAC)                      │
+│  • RESTful API Endpoints                                 │
+│  • Database: MySQL                                       │
 └──────────────────────────────────────────────────────────┘
          ↓                              ↓
 ┌──────────────────┐          ┌──────────────────┐
@@ -25,7 +25,7 @@ This project consists of **two frontend applications** (Admin Panel and Student 
 │                  │          │                  │
 │  Role: ADMIN     │          │  Role: STUDENT   │
 │  • Manage all    │          │  • Submit events │
-│  • Approve data │          │  • View own data │
+│  • Approve data  │          │  • View own data │
 │  • Full CRUD     │          │  • Limited access│
 └──────────────────┘          └──────────────────┘
 ```

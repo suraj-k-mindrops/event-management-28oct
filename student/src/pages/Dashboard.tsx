@@ -46,7 +46,7 @@ export default function Dashboard() {
       value: events.filter((e: any) => e.status === 'Pending').length,
       icon: TrendingUp,
       description: 'Awaiting approval',
-      color: 'from-accent to-amber-500',
+      color: 'from-primary to-primary',
     },
     {
       title: 'Approved',
